@@ -1,0 +1,33 @@
+.appBar {
+  background-color: #2196F3;
+  color: #fff;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}
+
+.appBar:hover {
+  background-color: #1976D2;
+}
+
+.headerText {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.additionalContent {
+  display: flex;
+  align-items: center;
+}
+
+.additionalContent p {
+  margin: 0 10px;
+  font-size: 14px;
+}
+
+.MuiIconButton-root {
+  color: #fff;
+}
+
+.MuiIconButton-root:hover {
+  background-color: transparent;
+}

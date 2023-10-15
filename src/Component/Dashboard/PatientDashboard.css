@@ -1,0 +1,25 @@
+/* PatientDashboard.css */
+.patient-dashboard {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .paper {
+    min-width: 200px;
+    height: 128px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    
+  }
+  
+  .paper:hover {
+    background-color: #d61313; /* Change to your desired hover background color */
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(189, 16, 16, 0.2);
+  }
+  
