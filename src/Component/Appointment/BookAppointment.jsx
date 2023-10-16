@@ -34,6 +34,7 @@ function BookAppointment() {
     // Handle appointment submission logic here
   };
 
+  
   return (
     <div className="main-container">
       <div>
