@@ -17,7 +17,7 @@ const Dashboard = () => {
       <div className="content">
         <Header />
         <div className="main-content">
-          {userDetails.user == 'patient' ? (<PatientDashboard/>) : userDetails.user == 'doctor' ? (<DoctorDashboard/>) : (<AdminDashboard/>)}
+          {userDetails.user === 'patient' ? (<PatientDashboard/>) : userDetails.user === 'doctor' ? (<DoctorDashboard/>) : (<AdminDashboard/>)}
         </div>
 
         

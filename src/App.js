@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./Component/Dashboard/Dashboard";
 import SignIn from "./Component/SignIn/SignIn";
 import SignUp from "./Component/SignUp/SignUp";
-import Appointment from "./Component/Appointment/Appointment";
 import { RoutesPath } from "./Component/helper";
 function App() {
   return (
@@ -14,6 +13,8 @@ function App() {
         <Route path={RoutesPath.DASHBOARD} element={<Dashboard />}>
           <Route path={RoutesPath.BOOK_APPOINTMENT}/>
           <Route path={RoutesPath.SHOW_APPOINTMENT} />
+          <Route path={RoutesPath.INSURANCE} />
+          <Route path={RoutesPath.ABOUT} />
         </Route>
       </Routes>
     </Router>
