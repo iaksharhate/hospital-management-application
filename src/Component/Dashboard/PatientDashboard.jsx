@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import React from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BookAppointment from "../Appointment/BookAppointment";
 import ShowAppointments from "./ShowAppointments";
 import { RoutesPath } from "../helper";
