@@ -4,20 +4,29 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import "./Sidebar.css";
+import { useState, useEffect } from "react";
 
 export default function SwipeableTemporaryDrawer() {
+
+  const [userData, setUserData] = useState({})
+
+  useEffect(()=> {
+    const localStorageData = JSON.parse(localStorage.getItem('userData'))
+    setUserData(localStorageData)
+  },[])
+
   const userDetails = {
-    user: "doctor",
-    age: "51",
-    bloodGroup: "B+",
-    firstName: "Rajat",
-    lastName: "String",
-    gender: "String",
-    email: "String",
-    password: "String",
-    city: "String",
-    state: "MH",
-    pincode: 410206,
+    user: "",
+    age: "",
+    bloodGroup: "",
+    firstName: "",
+    lastName: "",
+    gender: "",
+    email: "",
+    password: "",
+    city: "",
+    state: "",
+    pincode: 0,
     photo: "",
   };
 
@@ -32,55 +41,49 @@ export default function SwipeableTemporaryDrawer() {
         <ListItem key={userDetails.firstName} disablePadding>
           <ListItemButton>
             <strong>First Name : &nbsp;</strong>
-            <p>{userDetails.firstName}</p>
+            <p>{userData.firstName}</p>
           </ListItemButton>
         </ListItem>
         <ListItem key={userDetails.lastName} disablePadding>
           <ListItemButton>
             <strong>Last Name : &nbsp;</strong>
-            <p>{userDetails.lastName}</p>
+            <p>{userData.lastName}</p>
           </ListItemButton>
         </ListItem>
-        <ListItem key={userDetails.email} disablePadding>
+        <ListItem style={{display:'flex'}} key={userDetails.email} disablePadding>
           <ListItemButton>
-            <strong>Email : &nbsp;</strong>
-            <p>{userDetails.email}</p>
+            <strong>Email : {userData.email}</strong>
+            {/* <p>{userData.email}</p> */}
           </ListItemButton>
         </ListItem>
         <ListItem key={userDetails.gender} disablePadding>
           <ListItemButton>
             <strong>Gender : &nbsp;</strong>
-            <p>{userDetails.gender}</p>
+            <p>{userData.gender}</p>
           </ListItemButton>
         </ListItem>
         <ListItem key={userDetails.age} disablePadding>
           <ListItemButton>
             <strong>Age : &nbsp;</strong>
-            <p>{userDetails.age}</p>
-          </ListItemButton>
-        </ListItem>
-        <ListItem key={userDetails.bloodGroup} disablePadding>
-          <ListItemButton>
-            <strong>BloodGroup : &nbsp;</strong>
-            <p>{userDetails.bloodGroup}</p>
+            <p>{userData.age}</p>
           </ListItemButton>
         </ListItem>
         <ListItem key={userDetails.city} disablePadding>
           <ListItemButton>
             <strong>City : &nbsp;</strong>
-            <p>{userDetails.city}</p>
+            <p>{userData.city}</p>
           </ListItemButton>
         </ListItem>
         <ListItem key={userDetails.state} disablePadding>
           <ListItemButton>
             <strong>State: &nbsp;</strong>
-            <p>{userDetails.state}</p>
+            <p>{userData.state}</p>
           </ListItemButton>
         </ListItem>
         <ListItem key={userDetails.pincode} disablePadding>
           <ListItemButton>
             <strong>Pincode : &nbsp;</strong>
-            <p>{userDetails.pincode}</p>
+            <p>{userData.pinCode}</p>
           </ListItemButton>
         </ListItem>
       </List>

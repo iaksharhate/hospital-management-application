@@ -9,6 +9,14 @@
   background-color: #1976D2;
 }
 
+.logout{
+  background-color: #2196F3;
+}
+
+.logout:hover{
+  background-color: #fc0101;
+}
+
 .headerText {
   font-size: 24px;
   font-weight: bold;
@@ -31,3 +39,4 @@
 .MuiIconButton-root:hover {
   background-color: transparent;
 }
+

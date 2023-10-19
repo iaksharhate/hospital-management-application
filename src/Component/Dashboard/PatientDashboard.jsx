@@ -7,6 +7,7 @@ import ShowAppointments from "./ShowAppointments";
 import { RoutesPath } from "../helper";
 import Insurance from "../Insurance/Insurance";
 import About from "../About/About";
+import ShowDoctors from "./ShowDoctor";
 
 const PatientsDashboard = () => {
   const elevation = 4;
@@ -22,9 +23,7 @@ const PatientsDashboard = () => {
 
   const navigate = useNavigate();
   return (
-    
     <div style={{ marginTop: "20px" }}>
-      
       {location.pathname === RoutesPath.DASHBOARD && (
         <div>
           <Box
@@ -80,7 +79,7 @@ const PatientsDashboard = () => {
               <span>{PaperEnum.ShowAppointment}</span>{" "}
             </Paper>
             <Paper
-              onClick={() => navigate(RoutesPath.FIND_DOCTOR)}
+              onClick={() => navigate(RoutesPath.SHOW_DOCTOR)}
               elevation={elevation}
               sx={{
                 "&:hover": {
@@ -290,6 +289,9 @@ const PatientsDashboard = () => {
         {location.pathname === RoutesPath.SHOW_APPOINTMENT && (
           <ShowAppointments />
         )}
+        {location.pathname === RoutesPath.SHOW_DOCTOR && 
+          <ShowDoctors />
+        }
         {location.pathname === RoutesPath.INSURANCE && <Insurance />}
         {location.pathname === RoutesPath.ABOUT && <About />}
       </div>

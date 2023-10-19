@@ -11,7 +11,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  const [userData, setUserData] = useState({});
+
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -36,7 +36,6 @@ const SignIn = () => {
     } catch (error) {
       console.error("Error saving data to local storage:", error);
     }
-    console.log(userData);
     
   };
 

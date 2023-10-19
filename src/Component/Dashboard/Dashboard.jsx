@@ -31,7 +31,6 @@ const Dashboard = () => {
       <div className="content">
         <Header />
         <div className="main-content">
-          <h1>Dashboard</h1>
           {user.user === 'patient' ? (<PatientDashboard/>) : user.user === 'doctor' ? (<DoctorDashboard/>) : (<AdminDashboard/>)}
         </div>
       </div>

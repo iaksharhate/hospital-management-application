@@ -13,6 +13,7 @@ function App() {
         <Route path={RoutesPath.DASHBOARD} element={<Dashboard />}>
           <Route path={RoutesPath.BOOK_APPOINTMENT}/>
           <Route path={RoutesPath.SHOW_APPOINTMENT} />
+          <Route path={RoutesPath.SHOW_DOCTOR} />
           <Route path={RoutesPath.INSURANCE} />
           <Route path={RoutesPath.ABOUT} />
         </Route>

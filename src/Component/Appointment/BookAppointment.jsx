@@ -53,7 +53,8 @@ function BookAppointment() {
   });
 
   const [formValue, setFormValue] = useState({
-    dateTime: "",
+    date: "",
+    time: "",
     patientId: "",
     description: "",
     status: "raised",
@@ -65,10 +66,11 @@ function BookAppointment() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let appointment = {
-      dateTime: formValue.dateTime,
+      date: formValue.date,
+      time: formValue.time,
       doctorId: doctorId,
       patientId: userData.id,
-      // description: formValue.description,
+      description: formValue.description,
       status: "raised",
     };
 
@@ -80,7 +82,6 @@ function BookAppointment() {
       } else {
         alert(responseData.data.payload);
       }
-
     } catch (error) {
       alert("Error while creating appointment");
     }
@@ -96,25 +97,52 @@ function BookAppointment() {
     setFormValue({ ...formValue, [event.target.id]: event.target.value });
   };
 
+  const changeTimeValues = (event) => {
+    setFormValue({
+      ...formValue,
+      time: event.target.value,
+    });
+  };
+
   return (
     <div className="main-container">
       <div>
         <div>
-          <Container sx={{ maxWidth: "800px" }}>
-            <Typography variant="h4" component="h1" style={{ padding: "5%" }}>
-              Create Appointment
+          <Container sx={{ maxWidth: "1000px" }}>
+            <Typography variant="h3" component="h3" style={{ padding: "5%" }}>
+              Book appointment
             </Typography>
             <form onSubmit={handleSubmit}>
               <div style={{ paddingTop: "2%", paddingBottom: "2%" }}>
-                <InputLabel>Select Date and time</InputLabel>
+                <InputLabel>Select Date</InputLabel>
                 <TextField
-                  id="dateTime"
-                  type="datetime-local"
-                  value={formValue.dateTime}
+                  id="date"
+                  type="date"
+                  value={formValue.date}
                   onChange={changeValues}
                   fullWidth
                   required
                 />
+              </div>
+              <div style={{ paddingTop: "2%", paddingBottom: "2%" }}>
+                <InputLabel>Select Time</InputLabel>
+                <FormControl fullWidth>
+                  <Select
+                    labelId="time"
+                    id="time"
+                    value={formValue.time}
+                    onChange={changeTimeValues}
+                  >
+                    <MenuItem value="09:00 AM">09:00 - 10:00 AM</MenuItem>
+                    <MenuItem value="10:00 AM">10:00 - 11:00 AM</MenuItem>
+                    <MenuItem value="11:00 AM">11:00 - 12:00 AM</MenuItem>
+                    <MenuItem value="12:00 PM">12:00 - 1:00 PM</MenuItem>
+                    <MenuItem value="02:00 PM">02:00 - 03:00 PM</MenuItem>
+                    <MenuItem value="03:00 PM">03:00 - 4:00 PM</MenuItem>
+                    <MenuItem value="04:00 PM">04:00 - 5:00 PM</MenuItem>
+                    <MenuItem value="05:00 PM">05:00 - 6:00 PM</MenuItem>
+                  </Select>
+                </FormControl>
               </div>
               <div style={{ paddingTop: "2%", paddingBottom: "2%" }}>
                 <InputLabel>Select Doctor</InputLabel>
@@ -133,7 +161,6 @@ function BookAppointment() {
                 <InputLabel>Enter description</InputLabel>
                 <TextField
                   id="description"
-                  label="Description"
                   multiline
                   rows={4}
                   value={formValue.description}
