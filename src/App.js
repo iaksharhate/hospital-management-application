@@ -16,6 +16,7 @@ function App() {
           <Route path={RoutesPath.SHOW_DOCTOR} />
           <Route path={RoutesPath.INSURANCE} />
           <Route path={RoutesPath.ABOUT} />
+          <Route path={RoutesPath.CREATE_DOCTOR}/>
         </Route>
       </Routes>
     </Router>

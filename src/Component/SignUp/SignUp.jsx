@@ -1,24 +1,22 @@
-import React, { useState } from "react";
+import styled from "@emotion/styled";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import {
   Button,
-  Card,
   Input,
   InputLabel,
   MenuItem,
   Paper,
   Select,
-  TextField,
+  TextField
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import React, { useState } from "react";
 import { IMaskInput } from "react-imask";
-import "./SignUp.css";
-import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 import UserService from "../Service/UserService";
 import { RoutesPath } from "../helper";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import "./SignUp.css";
 
 const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
   const { onChange, ...other } = props;
@@ -173,7 +171,7 @@ const SignUp = () => {
         alert(response.data.payload);
       }
     } catch (error) {
-      console.error("Error saving data to local storage:", error);
+      console.error("Error creating user:", error);
     }
   };
 
