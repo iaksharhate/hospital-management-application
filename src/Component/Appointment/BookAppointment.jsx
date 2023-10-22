@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
 import {
-  Container,
-  Typography,
-  TextField,
-  FormControl,
-  Select,
-  MenuItem,
   Button,
+  Container,
+  FormControl,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from "@mui/material";
+import React, { useEffect, useState } from "react";
 
 import InputLabel from "@mui/material/InputLabel";
-import "./BookAppointment.css";
 import { useNavigate } from "react-router-dom";
-import UserService from "../Service/UserService";
 import AppointmentService from "../Service/AppointmentService";
 import TimeSlotService from "../Service/TimeSlotService";
-import { RoutesPath, timeslot } from "../helper";
+import UserService from "../Service/UserService";
+import { RoutesPath } from "../helper";
+import "./BookAppointment.css";
 
 function BookAppointment() {
   const [userData, setUserData] = useState({
@@ -27,10 +27,26 @@ function BookAppointment() {
     user: "",
   });
 
-  const date = new Date;
-  const month = date.getMonth() + 1 < 10 ? '0'+date.getMonth() + 1  : date.getMonth() + 1 ;
+  const date = new Date();
+  const month =
+    date.getMonth() + 1 < 10 ? "0" + date.getMonth() + 1 : date.getMonth() + 1;
   const minDateWithFullFormat = `${date.getFullYear()}-${month}-${date.getDate()}`;
-  const maxDateWithFullFormat = `${date.getFullYear()}-${+month + 1}-${date.getDate()}`;
+  const maxDateWithFullFormat = `${date.getFullYear()}-${
+    +month + 1
+  }-${date.getDate()}`;
+  const allSlots = [
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "12:00 PM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM",
+    "05:00 PM",
+  ];
+
+  const [doctorAvailability, setDoctorAvailability] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState([]);
 
   useEffect(() => {
     const localStorageData = JSON.parse(localStorage.getItem("userData"));
@@ -72,6 +88,7 @@ function BookAppointment() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let appointment = {
+      // date: selectedDate,
       date: formValue.date,
       time: formValue.time,
       doctorId: doctorId,
@@ -81,7 +98,9 @@ function BookAppointment() {
     };
 
     try {
-      const responseData = await AppointmentService.createAppointment(appointment);
+      const responseData = await AppointmentService.createAppointment(
+        appointment
+      );
       if (responseData.data.code === "200") {
         alert("Appointment created successfully!!");
         navigate(RoutesPath.SHOW_APPOINTMENT);
@@ -95,49 +114,42 @@ function BookAppointment() {
     console.log(appointment);
   };
 
-  const [bookedSlots, setBookedSlots] = useState([]);
-  function  handleDoctorChange(event) {
+
+  function handleDoctorChange(event) {
     setDoctorId(event.target.value);
-    
-    TimeSlotService.getBookedSlots(event.target.value).then(res => {
+    // window.location.reload();
+    TimeSlotService.getBookedSlots(event.target.value).then((res) => {
       if (res.data.code == 200) {
-        setBookedSlots(bookedSlots.push(res.data.payload));
-      } else if (res.data.code == 501) {
-        // yet to decide
-        setBookedSlots([]);
+        
+        setDoctorAvailability(res.data.payload);
       } else {
         // api failed
       }
-    })
+    });
   }
 
-  const getTimeSlots = async (id) => {
-    
-  }
-  const [a, seta] = useState({});
+  useEffect(() => {
+    if (formValue.date) {
+      // Filter the doctor's availability for the selected date.
+      const availabilityForSelectedDate = doctorAvailability.find(
+        (item) => item.date === formValue.date
+      );
 
-
-  function setUserData1(doctor, date) {
-    console.log(date);
-    if (!doctor && !date) {
-      return true;
+      if (availabilityForSelectedDate) {
+        const bookedSlots = availabilityForSelectedDate.time;
+        const available = allSlots.filter(
+          (slot) => !bookedSlots.includes(slot)
+        );
+        setAvailableSlots(available);
+      } else {
+        // If the selected date is not in the availability data, set all slots as available.
+        setAvailableSlots(allSlots);
+      }
     }
-    return false;
-    console.log(
-      formValue
-    );
-  }
+  }, [formValue.date, doctorAvailability]);
+
   const changeValues = (event) => {
     setFormValue({ ...formValue, [event.target.id]: event.target.value });
-    console.log(bookedSlots);
-    if (event.target.id=== 'date' && bookedSlots.length) {
-      let a = bookedSlots[0].forEach(element => {
-        if (element.date === formValue.date) {
-          return element.time;
-        }
-      });
-      console.log(a);
-    }
   };
 
   const changeTimeValues = (event) => {
@@ -149,7 +161,7 @@ function BookAppointment() {
 
   return (
     <div className="main-container">
-      <div>
+      <div className="form-container">
         <div>
           <Container sx={{ maxWidth: "1000px" }}>
             <Typography variant="h3" component="h3" style={{ padding: "5%" }}>
@@ -169,57 +181,41 @@ function BookAppointment() {
                   />
                 </FormControl>
               </div>
+
               <div style={{ paddingTop: "2%", paddingBottom: "2%" }}>
-                <InputLabel>Select Date</InputLabel>
+                <label>Select Date:</label>
                 <FormControl fullWidth>
-                <input
-                  disabled={!doctorId}
-                  style={{height: "40px"}}
-                  id="date"
-                  type="date"
-                  min={minDateWithFullFormat}
-                  max={maxDateWithFullFormat}
-                  value={formValue.date}
-                  onChange={changeValues}
-                  required
-                />
+                  <input
+                    disabled={!doctorId}
+                    type="date"
+                    style={{ height: "60px" }}
+                    id="date"
+                    value={formValue.date}
+                    min={minDateWithFullFormat}
+                    max={maxDateWithFullFormat}
+                    onChange={changeValues}
+                  />
                 </FormControl>
               </div>
               <div style={{ paddingTop: "2%", paddingBottom: "2%" }}>
-                <InputLabel>Select Time</InputLabel>
                 <FormControl fullWidth>
+                  <label>Select Time :</label>
                   <Select
                     disabled={!doctorId || !formValue.date}
                     labelId="time"
                     id="time"
                     value={formValue.time}
                     onChange={changeTimeValues}
-                  > 
-                  { 
-                    // bookedSlots[0].forEach(element => {
-                    //   if (element === formValue.date) {
-                    //     element.time.forEach(e => {
-                    //       return seta({...a, e:e})
-                    //     })
-                    //   }
-                    // })
-                  }
-                  {/* {console.log(a)} */}
-                    {/* <MenuItem disabled={true} value="09:00 AM">09:00 - 10:00 AM</MenuItem>
-                    <MenuItem disabled={true} value="10:00 AM">10:00 - 11:00 AM</MenuItem>
-                    <MenuItem disabled={true} value="11:00 AM">11:00 - 12:00 AM</MenuItem>
-                    <MenuItem disabled={true} value="12:00 PM">12:00 - 1:00 PM</MenuItem>
-                    <MenuItem disabled={true} value="02:00 PM">02:00 - 03:00 PM</MenuItem>
-                    <MenuItem disabled={true} value="03:00 PM">03:00 - 4:00 PM</MenuItem>
-                    <MenuItem disabled={true} value="04:00 PM">04:00 - 5:00 PM</MenuItem>
-                    <MenuItem disabled={true} value="05:00 PM">05:00 - 6:00 PM</MenuItem> */}
-
-                    {timeslot.map(element => (
-                      <MenuItem id={element.value} value={element.value}>{element.name}</MenuItem>
+                  >
+                    {availableSlots.map((element) => (
+                      <MenuItem id={element} value={element}>
+                        {element}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </div>
+
               <div style={{ paddingTop: "2%", paddingBottom: "2%" }}>
                 <InputLabel>Enter description</InputLabel>
                 <TextField
@@ -232,7 +228,6 @@ function BookAppointment() {
                   fullWidth
                 />
               </div>
-
               <Button type="submit" variant="contained" color="primary">
                 Submit Appointment
               </Button>
