@@ -1,7 +1,9 @@
 // ShowAppointments.jsx
 import React, { useEffect, useState } from "react";
 import "./ShowAppointments.css";
+import { useNavigate } from "react-router-dom";
 import AppointmentService from "../Service/AppointmentService";
+import { RoutesPath } from "../helper";
 
 const ShowAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -12,11 +14,11 @@ const ShowAppointments = () => {
     getAppointments(localStorageData);
   },[])
 
-
+  const navigate = useNavigate();
 
   const getAppointments = async (userData) => {
     try {
-      const response = await AppointmentService.getAppointment(
+      const response = await AppointmentService.getAppointmentsList(
         userData.id,
         userData.user
       );
@@ -59,13 +61,18 @@ const ShowAppointments = () => {
     }
   };
 
+  const updateAppointment = (a_Id) => {
+    
+    
+    // navigate(RoutesPath.RESCHEDULE_APPOINTMENT+`?id=${doctorId}`);
+    navigate(RoutesPath.RESCHEDULE_APPOINTMENT+`?a_Id=${a_Id}`);
+    
+  };
+
   return (
     <div className="patient-dashboard">
       <div className="patient-dashboard">
         <h1>My Appointments</h1>
-        <div>
-          <button onClick={() => handleReschedule()}>Book Appointment</button>
-        </div>
       </div>
       <div className="appointment-list">
         {appointments.map((appointment) => (
@@ -81,7 +88,7 @@ const ShowAppointments = () => {
             </div>
             {appointment.status !== "cancelled" && (
               <div className="action-buttons">
-                <button onClick={() => handleReschedule(appointment.id)}>
+                <button onClick={() => updateAppointment(appointment.id)}>
                   Reschedule
                 </button>
                 <button onClick={() => handleCancel(appointment.id)}>

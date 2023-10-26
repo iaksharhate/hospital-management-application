@@ -1,14 +1,38 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import "./CreateDoctor.css";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import "./UpdateDoctor.css";
 import { useState } from "react";
 import UserService from "../Service/UserService";
 import { RoutesPath } from "../helper";
 import { MenuItem, Select, TextField, Box, Button } from "@mui/material";
+import { useEffect } from "react";
 
-function CreateDoctor() {
+function UpdateUser() {
+  const [userData, setUserData] = useState({
+    token: "",
+    id: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    user: "",
+  });
 
-  const [formValue, setFormValue] = useState({
+  useEffect(() => {
+    const localStorageData = JSON.parse(localStorage.getItem("userData"));
+    setUserData(localStorageData);
+  }, []);
+
+  const [searchParams] = useSearchParams();
+
+  const navigate = useNavigate();
+  let doctorId;
+  useEffect(() => {
+    doctorId = searchParams.get("id");
+    getDoctorDetails(doctorId);
+  }, [doctorId]);
+
+  let userDetails = {
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -21,7 +45,45 @@ function CreateDoctor() {
     state: "",
     fees: "",
     pinCode: "",
-  });
+  };
+  const getDoctorDetails = async (id) => {
+    try {
+      const response = await UserService.getUserDetails(id);
+
+      if (response.data.code === "200") {
+        const user = response.data.payload;
+        setuserData(user);
+      } else {
+        console.log(response.data.payload);
+      }
+    } catch (error) {
+      alert("Error while fetching doctor details!!");
+    }
+  };
+
+  const [formValue, setFormValue] = useState(userDetails);
+
+  const setuserData = (user) => {
+    setFormValue({
+      ...formValue,
+      ...user,
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: user.password,
+      gender: user.gender,
+      age: user.age,
+      specialization: user.specialization,
+      experience: user.experience,
+      city: user.city,
+      state: user.state,
+      fees: user.fees,
+      pinCode: user.pinCode,
+    });
+    console.log("user", user);
+    console.log("formvalue", formValue);
+  };
 
   function changeGenderValues(event) {
     const newGenderValue = event.target.value;
@@ -30,8 +92,6 @@ function CreateDoctor() {
       gender: newGenderValue,
     }));
   }
-
-  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
 
@@ -102,23 +162,39 @@ function CreateDoctor() {
       }
     }
 
-    if (id == "specialization") {
-      if (!value) {
-        newErrors.specialization = "Specialization is required";
-      } else {
-        newErrors.specialization = "";
+    if (userData.user === "admin") {
+      if (id == "specialization") {
+        if (!value) {
+          newErrors.specialization = "Specialization is required";
+        } else {
+          newErrors.specialization = "";
+        }
+      }
+
+      if (id == "experience") {
+        if (!value) {
+          newErrors.experience = "Exp is required";
+        } else if (!/^(0?[0-9]|[1-3][0-9]|40)$/.test(value)) {
+          newErrors.experience = "Exp is invalid";
+        } else {
+          newErrors.experience = "";
+        }
+      }
+
+      if (id == "fees") {
+        if (!value) {
+          newErrors.fees = "Fees is required";
+        } else if (
+          !/^(5000|500[0-9]|[1-4][0-9]{3}|[5-9][0-9]{2}|[1-9][0-9])$/.test(value)
+        ) {
+          newErrors.fees = "Fees is invalid";
+        } else {
+          newErrors.fees = "";
+        }
       }
     }
 
-    if (id == "experience") {
-      if (!value) {
-        newErrors.experience = "Exp is required";
-      } else if (!/^(0?[0-9]|[1-3][0-9]|40)$/.test(value)) {
-        newErrors.experience = "Exp is invalid";
-      } else {
-        newErrors.experience = "";
-      }
-    }
+
 
     if (id == "city") {
       if (!value) {
@@ -146,22 +222,12 @@ function CreateDoctor() {
       }
     }
 
-    if (id == "fees") {
-      if (!value) {
-        newErrors.fees = "Fees is required";
-      } else if (!/^(5000|500[0-9]|[1-4][0-9]{3}|[5-9][0-9]{2}|[1-9][0-9])$/.test(value)) {
-        newErrors.fees = "Fees is invalid";
-      } else {
-        newErrors.fees = "";
-      }
-    }
-
     setErrors(newErrors);
   };
 
-  const handleSubmit = async (event) => {
+  const handleUpdate = async (event) => {
     event.preventDefault();
-    let doctor = {
+    let user = {
       firstName: formValue.firstName,
       lastName: formValue.lastName,
       email: formValue.email,
@@ -174,120 +240,95 @@ function CreateDoctor() {
       state: formValue.state,
       pinCode: formValue.pinCode,
       fees: formValue.fees,
-      user: "doctor",
+      user: formValue.user,
     };
-    console.log(doctor);
+    console.log("After Submit", user);
 
     const validationErrors = {};
-    if (!doctor.firstName.trim()) {
+    if (!user.firstName.trim()) {
       validationErrors.firstName = "First name is required";
     }
 
-    if (!doctor.lastName.trim()) {
+    if (!user.lastName.trim()) {
       validationErrors.lastName = "Last name is required";
     }
 
-    if (!doctor.email.trim()) {
+    if (!user.email.trim()) {
       validationErrors.email = "Email is required";
     }
 
-    if (!doctor.password.trim()) {
+    if (!user.password.trim()) {
       validationErrors.password = "Password is required";
     }
 
-    if (!doctor.gender.trim()) {
+    if (!user.gender.trim()) {
       validationErrors.gender = "Gender is required";
     }
 
-    if (!doctor.age.trim()) {
+    if (!user.age.trim()) {
       validationErrors.age = "Age is required";
     }
 
-    if (!doctor.specialization.trim()) {
-      validationErrors.specialization = "Specialization is required";
+    if (userData.user === "admin") {
+      if (!user.specialization.trim()) {
+        validationErrors.specialization = "Specialization is required";
+      }
+
+      if (!user.experience.trim()) {
+        validationErrors.experience = "Exp is required";
+      }
+
+      if (!user.fees.trim()) {
+        validationErrors.fees = "Fees is required";
+      }
     }
 
-    if (!doctor.experience.trim()) {
-      validationErrors.experience = "Exp is required";
-    }
-
-    if (!doctor.city.trim()) {
+    if (!user.city.trim()) {
       validationErrors.city = "City is required";
     }
 
-    if (!doctor.state.trim()) {
+    if (!user.state.trim()) {
       validationErrors.state = "State is required";
     }
 
-    if (!doctor.pinCode.trim()) {
+    if (!user.pinCode) {
       validationErrors.pinCode = "Pin Code is required";
-    }
-
-    if (!doctor.fees.trim()) {
-      validationErrors.fees = "Fees is required";
     }
 
     setErrors(validationErrors);
 
-    // try {
-    //   const response = await UserService.createUser(doctor);
-    //   if (response.data.code === "200") {
-    //     alert("Doctor addess successfully!!");
-    //     navigate(RoutesPath.SHOW_DOCTOR);
-    //   } else {
-    //     alert(response.data.payload);
-    //   }
-    // } catch (error) {
-    //   console.error("Error adding doctor:", error);
-    // }
+    console.log(formValue.id);
+
+    if (Object.keys(validationErrors).length == 0) {
+      try {
+        const response = await UserService.updateUserDetails(
+          formValue.id,
+          user
+        );
+        if (response.data.code === "200") {
+          alert("Details updated successfully!!");
+          if (userData.user === "patient") {
+            navigate(RoutesPath.DASHBOARD);
+          } else {
+            navigate(RoutesPath.SHOW_DOCTOR);
+          }
+        } else {
+          alert(response.data.payload);
+        }
+      } catch (error) {
+        console.error("Error adding doctor:", error);
+      }
+    } else {
+      alert("Please enter correct details!!!");
+    }
   };
 
-  //   const handleSignup = (event) => {
-  //     try {
-  //       event.preventDefault();
-  //       // Basic client-side validation
-
-  //       const validationErrors = {};
-  //       if (!user.name.trim()) {
-  //         validationErrors.username = "Name is required";
-  //       }
-
-  //       const newUser = {
-  //         name: user.name,
-  //         email: user.email,
-  //         password: user.password,
-  //       };
-
-  //       console.log(newUser);
-  //       let userDataList = [];
-  //       const isUsers = localStorage.getItem("users");
-  //       if (isUsers) {
-  //         userDataList = JSON.parse(isUsers);
-  //         console.log(userDataList);
-  //       }
-
-  //       userDataList.push(newUser);
-
-  //       console.log("userDataList", userDataList);
-
-  //       setErrors(validationErrors);
-
-  //       if (Object.keys(validationErrors).length === 0) {
-  //         localStorage.setItem("users", JSON.stringify(userDataList));
-  //         navigate("/signin");
-  //       } else {
-  //         alert("Please enter correct details!!!");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error saving data to local storage:", error);
-  //     }
-  //   };
   return (
     <div>
       <div>
         <div className="form-content">
           <div className="form">
-            <div className="form-head">Add Doctor</div>
+            <div className="form-head">Update Details</div>
             <div style={{ display: "flex" }}>
               <label className="label text">First Name :</label>
               <Box
@@ -442,66 +483,68 @@ function CreateDoctor() {
               </div>
             </div>
             {/* ============================= Specialization & Experience ================================== */}
-            <div style={{ display: "flex" }}>
+            {userData.user === "admin" && (
               <div style={{ display: "flex" }}>
-                <label className="label text">Specialization :</label>
-                <Box
-                  component="form"
-                  sx={{
-                    "& > :not(style)": {
-                      maxWidth: "200px",
-                      width: "20ch",
-                      m: 1,
-                    },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    id="specialization"
-                    name="specialization"
-                    variant="outlined"
-                    required
-                    value={formValue.specialization}
-                    size="small"
-                    onChange={handleChange}
-                    helperText={
-                      errors.specialization ? errors.specialization : ""
-                    } // Display the validation error message
-                    error={Boolean(errors.specialization)}
-                  />
-                  <error-output className="text-error"></error-output>
-                </Box>
+                <div style={{ display: "flex" }}>
+                  <label className="label text">Specialization :</label>
+                  <Box
+                    component="form"
+                    sx={{
+                      "& > :not(style)": {
+                        maxWidth: "200px",
+                        width: "20ch",
+                        m: 1,
+                      },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <TextField
+                      id="specialization"
+                      name="specialization"
+                      variant="outlined"
+                      required
+                      value={formValue.specialization}
+                      size="small"
+                      onChange={handleChange}
+                      helperText={
+                        errors.specialization ? errors.specialization : ""
+                      } // Display the validation error message
+                      error={Boolean(errors.specialization)}
+                    />
+                    <error-output className="text-error"></error-output>
+                  </Box>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <label className="label text">Experience :</label>
+                  <Box
+                    component="form"
+                    sx={{
+                      "& > :not(style)": {
+                        maxWidth: "200px",
+                        width: "15ch",
+                        mt: 1,
+                      },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <TextField
+                      id="experience"
+                      name="experience"
+                      variant="outlined"
+                      required
+                      value={formValue.experience}
+                      size="small"
+                      onChange={handleChange}
+                      helperText={errors.experience ? errors.experience : ""} // Display the validation error message
+                      error={Boolean(errors.experience)}
+                    />
+                    <error-output className="text-error"></error-output>
+                  </Box>
+                </div>
               </div>
-              <div style={{ display: "flex" }}>
-                <label className="label text">Experience :</label>
-                <Box
-                  component="form"
-                  sx={{
-                    "& > :not(style)": {
-                      maxWidth: "200px",
-                      width: "15ch",
-                      mt: 1,
-                    },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    id="experience"
-                    name="experience"
-                    variant="outlined"
-                    required
-                    value={formValue.experience}
-                    size="small"
-                    onChange={handleChange}
-                    helperText={errors.experience ? errors.experience : ""} // Display the validation error message
-                    error={Boolean(errors.experience)}
-                  />
-                  <error-output className="text-error"></error-output>
-                </Box>
-              </div>
-            </div>
+            )}
             {/* ============================= Specialization & Experience ================================== */}
             {/* ============================= City & State ================================== */}
             <div style={{ display: "flex" }}>
@@ -593,34 +636,36 @@ function CreateDoctor() {
                   <error-output className="text-error"></error-output>
                 </Box>
               </div>
-              <div style={{ display: "flex" }}>
-                <label className="label text">Fees :</label>
-                <Box
-                  component="form"
-                  sx={{
-                    "& > :not(style)": {
-                      maxWidth: "200px",
-                      width: "15ch",
-                      mt: 1,
-                    },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    id="fees"
-                    name="fees"
-                    variant="outlined"
-                    required
-                    value={formValue.fees}
-                    size="small"
-                    onChange={handleChange}
-                    helperText={errors.fees ? errors.fees : ""} // Display the validation error message
-                    error={Boolean(errors.fees)}
-                  />
-                  <error-output className="text-error"></error-output>
-                </Box>
-              </div>
+              {userData.user === "admin" && (
+                <div style={{ display: "flex" }}>
+                  <label className="label text">Fees :</label>
+                  <Box
+                    component="form"
+                    sx={{
+                      "& > :not(style)": {
+                        maxWidth: "200px",
+                        width: "15ch",
+                        mt: 1,
+                      },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <TextField
+                      id="fees"
+                      name="fees"
+                      variant="outlined"
+                      required
+                      value={formValue.fees}
+                      size="small"
+                      onChange={handleChange}
+                      helperText={errors.fees ? errors.fees : ""} // Display the validation error message
+                      error={Boolean(errors.fees)}
+                    />
+                    <error-output className="text-error"></error-output>
+                  </Box>
+                </div>
+              )}
             </div>
             {/* ============================= Pincode & Fees ================================== */}
 
@@ -631,8 +676,8 @@ function CreateDoctor() {
                 paddingTop: "10px",
               }}
             >
-              <Button variant="contained" size="large" onClick={handleSubmit}>
-                Submit
+              <Button variant="contained" size="large" onClick={handleUpdate}>
+                Update
               </Button>
             </div>
           </div>
@@ -642,4 +687,4 @@ function CreateDoctor() {
   );
 }
 
-export default CreateDoctor;
+export default UpdateUser;

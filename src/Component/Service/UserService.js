@@ -15,6 +15,14 @@ class UserService{
     getDoctorDetails(){
         return axios.get(`${USER_BASE_URL}/getDoctors`);
     };
+
+    getUserDetails(id){
+        return axios.get(`${USER_BASE_URL}/getUserById/${id}`);
+    }
+
+    updateUserDetails(id, data){
+        return axios.put(`${USER_BASE_URL}/UpdateById/${id}`, data);
+    }
 };
 
 export default new UserService();

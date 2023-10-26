@@ -5,15 +5,20 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import "./Sidebar.css";
 import { useState, useEffect } from "react";
+import { Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate } from "react-router-dom";
+import { RoutesPath } from "../helper";
 
 export default function SwipeableTemporaryDrawer() {
+  const [userData, setUserData] = useState({});
 
-  const [userData, setUserData] = useState({})
+  useEffect(() => {
+    const localStorageData = JSON.parse(localStorage.getItem("userData"));
+    setUserData(localStorageData);
+  }, []);
 
-  useEffect(()=> {
-    const localStorageData = JSON.parse(localStorage.getItem('userData'))
-    setUserData(localStorageData)
-  },[])
+  const navigate = useNavigate();
 
   const userDetails = {
     user: "",
@@ -30,6 +35,10 @@ export default function SwipeableTemporaryDrawer() {
     photo: "",
   };
 
+  const editUser = (userId) => {
+    navigate(RoutesPath.UPDATE_PATIENT + `?id=${userId}`);
+  }
+
   const list = (anchor) => (
     <Box role="presentation">
       <img
@@ -40,52 +49,64 @@ export default function SwipeableTemporaryDrawer() {
       <List>
         <ListItem key={userDetails.firstName} disablePadding>
           <ListItemButton>
-            <strong>First Name : &nbsp;</strong>
-            <p>{userData.firstName}</p>
+            <strong>First Name : {userData.firstName}</strong>
           </ListItemButton>
         </ListItem>
         <ListItem key={userDetails.lastName} disablePadding>
           <ListItemButton>
-            <strong>Last Name : &nbsp;</strong>
-            <p>{userData.lastName}</p>
+            <strong>Last Name : {userData.lastName}</strong>
+            {/* <p>{userData.lastName}</p> */}
           </ListItemButton>
         </ListItem>
-        <ListItem style={{display:'flex'}} key={userDetails.email} disablePadding>
+        <ListItem
+          style={{ display: "flex" }}
+          key={userDetails.email}
+          disablePadding
+        >
           <ListItemButton>
             <strong>Email : {userData.email}</strong>
             {/* <p>{userData.email}</p> */}
           </ListItemButton>
         </ListItem>
-        <ListItem key={userDetails.gender} disablePadding>
+        <ListItem key={userData.gender} disablePadding>
           <ListItemButton>
-            <strong>Gender : &nbsp;</strong>
-            <p>{userData.gender}</p>
+            <strong>Gender : {userData.gender}</strong>
           </ListItemButton>
         </ListItem>
-        <ListItem key={userDetails.age} disablePadding>
+        <ListItem key={userData.age} disablePadding>
           <ListItemButton>
-            <strong>Age : &nbsp;</strong>
-            <p>{userData.age}</p>
+            <strong>Age : {userData.age}</strong>
           </ListItemButton>
         </ListItem>
-        <ListItem key={userDetails.city} disablePadding>
+        <ListItem key={userData.city} disablePadding>
           <ListItemButton>
-            <strong>City : &nbsp;</strong>
-            <p>{userData.city}</p>
+            <strong>City : {userData.city}</strong>
           </ListItemButton>
         </ListItem>
-        <ListItem key={userDetails.state} disablePadding>
+        <ListItem key={userData.state} disablePadding>
           <ListItemButton>
-            <strong>State: &nbsp;</strong>
-            <p>{userData.state}</p>
+            <strong>State: {userData.state}</strong>
           </ListItemButton>
         </ListItem>
-        <ListItem key={userDetails.pincode} disablePadding>
+        <ListItem key={userData.pincode} disablePadding>
           <ListItemButton>
-            <strong>Pincode : &nbsp;</strong>
-            <p>{userData.pinCode}</p>
+            <strong>Pincode : {userData.pinCode}</strong>
           </ListItemButton>
         </ListItem>
+        {userData.user === "patient" && (
+          <ListItem disablePadding>
+            <ListItemButton>
+              <Button
+                sx={{ color: "white" }}
+                variant="contained"
+                startIcon={<EditIcon />}
+                onClick={() => editUser(userData.id)}
+              >
+                Edit details
+              </Button>
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
     </Box>
   );

@@ -276,7 +276,6 @@ const SignUp = () => {
                   labelId="demo-select-small-label"
                   id="gender"
                   value={formValue.gender}
-                  label="Gender"
                   onChange={changeGenderValues}
                   sx={{ width: "20vw" }}
                 >

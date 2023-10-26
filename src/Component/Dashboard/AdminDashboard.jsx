@@ -9,8 +9,13 @@ import Insurance from "../Insurance/Insurance";
 import About from "../About/About";
 import ShowDoctors from "./ShowDoctor";
 import CreateDoctor from "./CreateDoctor";
+import UpdateUser from "./UpdateUser";
+import { useParams } from "react-router-dom";
 
 const AdminDashboard = () => {
+
+  const { doctorId } = useParams();
+
   const elevation = 4;
   const PaperEnum = {
     Appointment: "Appointments",
@@ -256,6 +261,7 @@ const AdminDashboard = () => {
         )}
         {location.pathname === RoutesPath.SHOW_DOCTOR && <ShowDoctors />}
         {location.pathname === RoutesPath.CREATE_DOCTOR && <CreateDoctor />}
+        {location.pathname === RoutesPath.UPDATE_DOCTOR && <UpdateUser/>}
       </div>
     </div>
   );

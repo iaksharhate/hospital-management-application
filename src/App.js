@@ -4,6 +4,8 @@ import Dashboard from "./Component/Dashboard/Dashboard";
 import SignIn from "./Component/SignIn/SignIn";
 import SignUp from "./Component/SignUp/SignUp";
 import { RoutesPath } from "./Component/helper";
+import CreateDoctor from "./Component/Dashboard/CreateDoctor";
+import UpdateUser from "./Component/Dashboard/UpdateUser";
 function App() {
   return (
     <Router>
@@ -17,6 +19,10 @@ function App() {
           <Route path={RoutesPath.INSURANCE} />
           <Route path={RoutesPath.ABOUT} />
           <Route path={RoutesPath.CREATE_DOCTOR}/>
+          {/* <Route path={`${RoutesPath.UPDATE_DOCTOR}/:doctorId`} element={<UpdateDoctor />} /> */}
+          <Route path={RoutesPath.UPDATE_DOCTOR}/>
+          <Route path={RoutesPath.UPDATE_PATIENT}/>
+          <Route path={RoutesPath.RESCHEDULE_APPOINTMENT}/>
         </Route>
       </Routes>
     </Router>

@@ -8,6 +8,8 @@ import { RoutesPath } from "../helper";
 import Insurance from "../Insurance/Insurance";
 import About from "../About/About";
 import ShowDoctors from "./ShowDoctor";
+import UpdateAppointment from "./UpdateAppointment";
+import UpdateUser from "./UpdateUser";
 
 const PatientsDashboard = () => {
   const elevation = 4;
@@ -289,8 +291,14 @@ const PatientsDashboard = () => {
         {location.pathname === RoutesPath.SHOW_APPOINTMENT && (
           <ShowAppointments />
         )}
+        {location.pathname === RoutesPath.RESCHEDULE_APPOINTMENT && (
+          <UpdateAppointment />
+        )}
         {location.pathname === RoutesPath.SHOW_DOCTOR && 
           <ShowDoctors />
+        }
+        {location.pathname === RoutesPath.UPDATE_PATIENT && 
+          <UpdateUser />
         }
         {location.pathname === RoutesPath.INSURANCE && <Insurance />}
         {location.pathname === RoutesPath.ABOUT && <About />}
