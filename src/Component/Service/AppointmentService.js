@@ -12,8 +12,16 @@ class AppointmentService {
         return axios.get(`${BASE_APPOINTMENT_URL}/getByUserId/${id}/${user}`)
     }
 
+    getAllApps(){
+        return axios.get(`${BASE_APPOINTMENT_URL}/getAll`);
+    }
+
     cancelAppointment(id, data){
         return axios.patch(`${BASE_APPOINTMENT_URL}/cancelById/${id}`, data)
+    }
+    
+    completeAppointment(id, data){
+        return axios.patch(`${BASE_APPOINTMENT_URL}/doneById/${id}`, data)
     }
 
     getAppointmentById(id){

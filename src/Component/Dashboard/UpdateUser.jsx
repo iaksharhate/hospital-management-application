@@ -37,6 +37,7 @@ function UpdateUser() {
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
     gender: "",
     age: "",
     specialization: "",
@@ -144,6 +145,18 @@ function UpdateUser() {
       }
     }
 
+    if (id == "confirmPassword") {
+      if (!value) {
+        newErrors.confirmPassword = "Password is required";
+      } else if (
+        !/^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$&])[A-Za-z0-9@#$&]{8,}$/.test(value) || value != formValue.password
+      ) {
+        newErrors.confirmPassword = "Password is not matching";
+      } else {
+        newErrors.confirmPassword = "";
+      }
+    }
+
     if (id == "gender") {
       if (!value) {
         newErrors.gender = "Gender is required";
@@ -215,7 +228,7 @@ function UpdateUser() {
     if (id == "pinCode") {
       if (!value) {
         newErrors.pinCode = "Pin Code is required";
-      } else if (!/^\d{3} \d{3}$/.test(value)) {
+      } else if (!/^[1-9][0-9]{5}$/.test(value)) {
         newErrors.pinCode = "Pin Code is invalid";
       } else {
         newErrors.pinCode = "";
@@ -413,12 +426,35 @@ function UpdateUser() {
                   name="password"
                   variant="outlined"
                   required
-                  //   type="password"
+                    type="password"
                   value={formValue.password}
                   size="small"
                   onChange={handleChange}
                   helperText={errors.password ? errors.password : ""} // Display the validation error message
                   error={Boolean(errors.password)}
+                />
+              </Box>
+            </div>
+            <div style={{ display: "flex" }}>
+              <label className="label text">Confirm Password :</label>
+              <Box
+                component="form"
+                sx={{
+                  "& > :not(style)": { maxWidth: "500px", width: "55ch", m: 1 },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <TextField
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  variant="outlined"
+                  required
+                  value={formValue.confirmPassword}
+                  size="small"
+                  onChange={handleChange}
+                  helperText={errors.confirmPassword ? errors.confirmPassword : ""} // Display the validation error message
+                  error={Boolean(errors.confirmPassword)}
                 />
               </Box>
             </div>

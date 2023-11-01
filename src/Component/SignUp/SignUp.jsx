@@ -40,35 +40,10 @@ const SignUp = () => {
 
   const [city, setCity] = useState([]);
 
-  const handleChangeGender = (event) => {
-    setGender(event.target.value);
-  };
-
-  const handleChangeState = (event) => {
-    setState(event.target.value);
-  };
-
-  const handleChangeName = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setCity(
-      // On autofill, we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
-
   const [values, setValues] = React.useState({
     textmask: "",
     numberformat: "1320",
   });
-
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value,
-    });
-  };
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -81,18 +56,7 @@ const SignUp = () => {
     },
   };
 
-  const names = [
-    "Khanda Colony",
-    "New Panvel",
-    "Kharghar",
-    "Kalamboli",
-    "Kamothe",
-    "Belapur",
-    "Taloja",
-    "Roadpali",
-    "SeaWoods",
-    "Vashi",
-  ];
+
 
   function getStyles(name, city, theme) {
     return {
@@ -110,6 +74,7 @@ const SignUp = () => {
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
     gender: "",
     age: "",
     city: "",
@@ -125,58 +90,190 @@ const SignUp = () => {
     }));
   }
 
-  function changeCityValues(event) {
-    const newCityValue = event.target.value;
-    setFormValue((prevState) => ({
-      ...prevState,
-      city: newCityValue,
-    }));
-  }
-
-  function changeStateValues(event) {
-    const newStateValue = event.target.value;
-    setFormValue((prevState) => ({
-      ...prevState,
-      state: newStateValue,
-    }));
-  }
 
   const navigate = useNavigate();
 
-  const handleSignup = async (event) => {
-    event.preventDefault();
-    
-
-    try {
-      let user = {
-        user:'patient',
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        email: formValue.email,
-        password: formValue.password,
-        gender: formValue.gender,
-        age: formValue.age,
-        city: formValue.city,
-        state: formValue.state,
-        pinCode: formValue.pinCode,
-      };
-      console.log(user);
-
-      const response = await UserService.createUser(user);
-      
-      if (response.data.code === "200") {
-        alert("User addess successfully!!")
-        navigate(RoutesPath.SIGNIN);
-      } else {
-        alert(response.data.payload);
-      }
-    } catch (error) {
-      console.error("Error creating user:", error);
-    }
-  };
+  const [errors, setErrors] = useState({});
 
   const changeValues = (event) => {
+    const { id, value } = event.target;
     setFormValue({ ...formValue, [event.target.id]: event.target.value });
+    const newErrors = { ...errors };
+
+    if (id == "firstName") {
+      if (!value) {
+        newErrors.firstName = "First name is required";
+      } else if (!/^[A-Z]{1}[a-zA-Z\\s]{2,}$/.test(value)) {
+        newErrors.firstName = "First name is invalid";
+      } else {
+        newErrors.firstName = "";
+      }
+    }
+
+    if (id == "lastName") {
+      if (!value) {
+        newErrors.lastName = "Last name is required";
+      } else if (!/^[A-Z]{1}[a-zA-Z\\s]{2,}$/.test(value)) {
+        newErrors.lastName = "Last name is invalid";
+      } else {
+        newErrors.lastName = "";
+      }
+    }
+
+    if (id == "email") {
+      if (!value) {
+        newErrors.email = "Email is required";
+      } else if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+        newErrors.email = "Email is invalid";
+      } else {
+        newErrors.email = "";
+      }
+    }
+
+    if (id == "password") {
+      if (!value) {
+        newErrors.password = "Password is required";
+      } else if (
+        !/^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$&])[A-Za-z0-9@#$&]{8,}$/.test(value)
+      ) {
+        newErrors.password = "Password is invalid";
+      } else {
+        newErrors.password = "";
+      }
+    }
+    if (id == "confirmPassword") {
+      if (!value) {
+        newErrors.confirmPassword = "Password is required";
+      } else if (
+        !/^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$&])[A-Za-z0-9@#$&]{8,}$/.test(value) || value != formValue.password
+      ) {
+        newErrors.confirmPassword = "Password is not matching";
+      } else {
+        newErrors.confirmPassword = "";
+      }
+    }
+
+    if (id == "gender") {
+      if (!value) {
+        newErrors.gender = "Gender is required";
+      } else {
+        newErrors.gender = "";
+      }
+    }
+
+    if (id == "age") {
+      if (!value) {
+        newErrors.age = "Age is required";
+      } else if (!/^(?:1[0-4]\d|150|[1-9]\d|\d)$/.test(value)) {
+        newErrors.age = "Age is invalid";
+      } else {
+        newErrors.age = "";
+      }
+    }
+
+    if (id == "city") {
+      if (!value) {
+        newErrors.city = "City is required";
+      } else {
+        newErrors.city = "";
+      }
+    }
+
+    if (id == "state") {
+      if (!value) {
+        newErrors.state = "State is required";
+      } else {
+        newErrors.state = "";
+      }
+    }
+
+    if (id == "pinCode") {
+      if (!value) {
+        newErrors.pinCode = "Pin Code is required";
+      } else if (!/^[1-9][0-9]{5}$/.test(value)) {
+        newErrors.pinCode = "Pin Code is invalid";
+      } else {
+        newErrors.pinCode = "";
+      }
+    }
+
+    setErrors(newErrors);
+
+  };
+
+  const handleSignup = async (event) => {
+    event.preventDefault();
+
+    let user = {
+      user: 'patient',
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      password: formValue.password,
+      gender: formValue.gender,
+      age: formValue.age,
+      city: formValue.city,
+      state: formValue.state,
+      pinCode: formValue.pinCode,
+    };
+
+
+    const validationErrors = {};
+    if (!user.firstName.trim()) {
+      validationErrors.firstName = "First name is required";
+    }
+
+    if (!user.lastName.trim()) {
+      validationErrors.lastName = "Last name is required";
+    }
+
+    if (!user.email.trim()) {
+      validationErrors.email = "Email is required";
+    }
+
+    if (!user.password.trim()) {
+      validationErrors.password = "Password is required";
+    }
+
+    if (!user.gender.trim()) {
+      validationErrors.gender = "Gender is required";
+    }
+
+    if (!user.age.trim()) {
+      validationErrors.age = "Age is required";
+    }
+
+    if (!user.city.trim()) {
+      validationErrors.city = "City is required";
+    }
+
+    if (!user.state.trim()) {
+      validationErrors.state = "State is required";
+    }
+
+    if (!user.pinCode.trim()) {
+      validationErrors.pinCode = "Pin Code is required";
+    }
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length == 0) {
+      console.log(user);
+      try {
+        const response = await UserService.createUser(user);
+
+        if (response.data.code === "200") {
+          alert("User addess successfully!!")
+          navigate(RoutesPath.SIGNIN);
+        } else {
+          alert(response.data.payload);
+        }
+      } catch (error) {
+        console.error("Error creating user:", error);
+      }
+    } else {
+      alert('Please enter correct details!!!');
+    }
   };
 
   // ----------------------phtot Upload---------------------------
@@ -195,7 +292,7 @@ const SignUp = () => {
 
   const theme = useTheme();
 
-  // -------------------------------age-------------------------------
+
   return (
     <div className="body">
       <div className="xyz">
@@ -221,6 +318,8 @@ const SignUp = () => {
                 variant="outlined"
                 value={formValue.firstName}
                 onChange={changeValues}
+                helperText={errors.firstName ? errors.firstName : ""} // Display the validation error message
+                error={Boolean(errors.firstName)}
               />
               <TextField
                 sx={{ width: "48%" }}
@@ -229,6 +328,8 @@ const SignUp = () => {
                 variant="outlined"
                 value={formValue.lastName}
                 onChange={changeValues}
+                helperText={errors.lastName ? errors.lastName : ""} // Display the validation error message
+                error={Boolean(errors.lastName)}
               />
             </div>
 
@@ -238,6 +339,8 @@ const SignUp = () => {
               id="email"
               value={formValue.email}
               onChange={changeValues}
+              helperText={errors.email ? errors.email : ""} // Display the validation error message
+              error={Boolean(errors.email)}
             />
 
             <div
@@ -249,14 +352,21 @@ const SignUp = () => {
                 id="password"
                 label={"Password"}
                 variant="outlined"
+                type="password"
                 value={formValue.password}
                 onChange={changeValues}
+                helperText={errors.password ? errors.password : ""} // Display the validation error message
+                error={Boolean(errors.password)}
               />
               <TextField
                 sx={{ width: "48%" }}
-                id="outlined-basic"
+                id="confirmPassword"
                 label="Confirm Password"
                 variant="outlined"
+                value={formValue.confirmPassword}
+                onChange={changeValues}
+                helperText={errors.confirmPassword ? errors.confirmPassword : ""} // Display the validation error message
+                error={Boolean(errors.confirmPassword)}
               />
             </div>
 
@@ -278,6 +388,8 @@ const SignUp = () => {
                   value={formValue.gender}
                   onChange={changeGenderValues}
                   sx={{ width: "20vw" }}
+                  helperText={errors.gender ? errors.gender : ""} // Display the validation error message
+                  error={Boolean(errors.gender)}
                 >
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
@@ -299,47 +411,34 @@ const SignUp = () => {
                   name="Age"
                   id="age"
                   // inputComponent={TextMaskCustom}
+                  helperText={errors.age ? errors.age : ""} // Display the validation error message
+                  error={Boolean(errors.age)}
                   sx={{ width: "100%" }}
                 />
               </div>
             </div>
             {/* -------------------------------city-------------------------------------- */}
-
             <InputLabel id="demo-multiple-name-label">Select City</InputLabel>
-            <Select
+            <TextField
               labelId="demo-multiple-name-label"
               id="city"
               value={formValue.city}
-              onChange={changeCityValues}
-              // input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
-            >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, city, theme)}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
+              onChange={changeValues}
+              helperText={errors.city ? errors.city : ""} // Display the validation error message
+              error={Boolean(errors.city)}
+            />
 
             {/* -----------------------state------------------------------------- */}
             <InputLabel id="demo-select-small-label">State</InputLabel>
-            <Select
+            <TextField
               labelId="demo-select-small-label"
               id="state"
               value={formValue.state}
-              label="State"
-              onChange={changeStateValues}
+              onChange={changeValues}
+              helperText={errors.state ? errors.state : ""} // Display the validation error message
+              error={Boolean(errors.state)}
             >
-              <MenuItem value="Male">Maharashtra</MenuItem>
-              <MenuItem value="Female">Goa</MenuItem>
-              <MenuItem value="Others">Utter Pradesh</MenuItem>
-              <MenuItem value="Others">Madhya Pradesh</MenuItem>
-              <MenuItem value="Others">Assam</MenuItem>
-            </Select>
+            </TextField>
             {/* --------------------------------------pincode------------------------------------ */}
             <div
               class="flex-container"
@@ -349,7 +448,13 @@ const SignUp = () => {
                 margin: "1% 0%",
               }}
             >
-              <TextField id="pinCode" label={"Pin Code"} variant="outlined"  onChange={changeValues}/>
+              <TextField id="pinCode"
+                label={"Pin Code"}
+                variant="outlined"
+                onChange={changeValues}
+                helperText={errors.pinCode ? errors.pinCode : ""} // Display the validation error message
+                error={Boolean(errors.pinCode)}
+              />
               <Button
                 component="label"
                 variant="grey"

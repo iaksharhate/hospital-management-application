@@ -25,6 +25,8 @@ const SignIn = () => {
         password: user.password,
       };
 
+      // const isUsers = localStorage.getItem('users');
+
       const response = await UserService.userLogin(newUser);
       
       if (response.data.code === "200") {
@@ -32,11 +34,11 @@ const SignIn = () => {
         navigate(RoutesPath.DASHBOARD);
       } else {
         alert(response.data.payload);
-      }
+        }
     } catch (error) {
       console.error("Error saving data to local storage:", error);
     }
-    
+
   };
 
   return (

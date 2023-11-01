@@ -31,9 +31,8 @@ function BookAppointment() {
   const month =
     date.getMonth() + 1 < 10 ? "0" + date.getMonth() + 1 : date.getMonth() + 1;
   const minDateWithFullFormat = `${date.getFullYear()}-${month}-${date.getDate()}`;
-  const maxDateWithFullFormat = `${date.getFullYear()}-${
-    +month + 1
-  }-${date.getDate()}`;
+  const maxDateWithFullFormat = `${date.getFullYear()}-${+month + 1
+    }-${date.getDate()}`;
   const allSlots = [
     "09:00 AM",
     "10:00 AM",
@@ -120,7 +119,7 @@ function BookAppointment() {
     // window.location.reload();
     TimeSlotService.getBookedSlots(event.target.value).then((res) => {
       if (res.data.code == 200) {
-        
+
         setDoctorAvailability(res.data.payload);
       } else {
         // api failed

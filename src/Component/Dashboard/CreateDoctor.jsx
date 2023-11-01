@@ -13,6 +13,7 @@ function CreateDoctor() {
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
     gender: "",
     age: "",
     specialization: "",
@@ -83,6 +84,18 @@ function CreateDoctor() {
         newErrors.password = "";
       }
     }
+    
+    if (id == "confirmPassword") {
+      if (!value) {
+        newErrors.confirmPassword = "Password is required";
+      } else if (
+        !/^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$&])[A-Za-z0-9@#$&]{8,}$/.test(value) || value != formValue.password
+      ) {
+        newErrors.confirmPassword = "Password is not matching";
+      } else {
+        newErrors.confirmPassword = "";
+      }
+    }
 
     if (id == "gender") {
       if (!value) {
@@ -139,7 +152,7 @@ function CreateDoctor() {
     if (id == "pinCode") {
       if (!value) {
         newErrors.pinCode = "Pin Code is required";
-      } else if (!/^\d{3} \d{3}$/.test(value)) {
+      } else if (!/^[1-9][0-9]{5}$/.test(value)) {
         newErrors.pinCode = "Pin Code is invalid";
       } else {
         newErrors.pinCode = "";
@@ -229,59 +242,23 @@ function CreateDoctor() {
 
     setErrors(validationErrors);
 
-    // try {
-    //   const response = await UserService.createUser(doctor);
-    //   if (response.data.code === "200") {
-    //     alert("Doctor addess successfully!!");
-    //     navigate(RoutesPath.SHOW_DOCTOR);
-    //   } else {
-    //     alert(response.data.payload);
-    //   }
-    // } catch (error) {
-    //   console.error("Error adding doctor:", error);
-    // }
+    if (Object.keys(validationErrors).length < 0) {
+      try {
+        const response = await UserService.createUser(doctor);
+        if (response.data.code === "200") {
+          alert("Doctor addess successfully!!");
+          navigate(RoutesPath.SHOW_DOCTOR);
+        } else {
+          alert(response.data.payload);
+        }
+      } catch (error) {
+        console.error("Error adding doctor:", error);
+      }
+    } else {
+      alert('Please enter correct details!!!');
+    }
   };
-
-  //   const handleSignup = (event) => {
-  //     try {
-  //       event.preventDefault();
-  //       // Basic client-side validation
-
-  //       const validationErrors = {};
-  //       if (!user.name.trim()) {
-  //         validationErrors.username = "Name is required";
-  //       }
-
-  //       const newUser = {
-  //         name: user.name,
-  //         email: user.email,
-  //         password: user.password,
-  //       };
-
-  //       console.log(newUser);
-  //       let userDataList = [];
-  //       const isUsers = localStorage.getItem("users");
-  //       if (isUsers) {
-  //         userDataList = JSON.parse(isUsers);
-  //         console.log(userDataList);
-  //       }
-
-  //       userDataList.push(newUser);
-
-  //       console.log("userDataList", userDataList);
-
-  //       setErrors(validationErrors);
-
-  //       if (Object.keys(validationErrors).length === 0) {
-  //         localStorage.setItem("users", JSON.stringify(userDataList));
-  //         navigate("/signin");
-  //       } else {
-  //         alert("Please enter correct details!!!");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error saving data to local storage:", error);
-  //     }
-  //   };
+  
   return (
     <div>
       <div>
@@ -372,12 +349,35 @@ function CreateDoctor() {
                   name="password"
                   variant="outlined"
                   required
-                  //   type="password"
+                  type="password"
                   value={formValue.password}
                   size="small"
                   onChange={handleChange}
                   helperText={errors.password ? errors.password : ""} // Display the validation error message
                   error={Boolean(errors.password)}
+                />
+              </Box>
+            </div>
+            <div style={{ display: "flex" }}>
+              <label className="label text">Confirm Password :</label>
+              <Box
+                component="form"
+                sx={{
+                  "& > :not(style)": { maxWidth: "500px", width: "55ch", m: 1 },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <TextField
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  variant="outlined"
+                  required
+                  value={formValue.confirmPassword}
+                  size="small"
+                  onChange={handleChange}
+                  helperText={errors.confirmPassword ? errors.confirmPassword : ""} // Display the validation error message
+                  error={Boolean(errors.confirmPassword)}
                 />
               </Box>
             </div>

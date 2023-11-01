@@ -6,13 +6,15 @@ import SignUp from "./Component/SignUp/SignUp";
 import { RoutesPath } from "./Component/helper";
 import CreateDoctor from "./Component/Dashboard/CreateDoctor";
 import UpdateUser from "./Component/Dashboard/UpdateUser";
+import AuthRoute from "./AuthRoute";
+import ProtectedRoute from "./ProtectedRoute";
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path={RoutesPath.SIGNIN} element={<SignIn />} />
-        <Route path={RoutesPath.SIGNUP} element={<SignUp />} />
-        <Route path={RoutesPath.DASHBOARD} element={<Dashboard />}>
+        <Route path={RoutesPath.SIGNIN} element={<AuthRoute><SignIn /></AuthRoute> } />
+        <Route path={RoutesPath.SIGNUP} element={<AuthRoute><SignUp /></AuthRoute>} />
+        <Route path={RoutesPath.DASHBOARD} element={ <ProtectedRoute><Dashboard /></ProtectedRoute> }>
           <Route path={RoutesPath.BOOK_APPOINTMENT}/>
           <Route path={RoutesPath.SHOW_APPOINTMENT} />
           <Route path={RoutesPath.SHOW_DOCTOR} />
