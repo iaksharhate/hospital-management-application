@@ -24,7 +24,7 @@ const Header = () => {
         <div style={{ flexGrow: 1 }} />
         <div className="additionalContent"></div>
         <div className="additionalContent">
-          <p>Hospital name : MGM</p>
+          <p>Hospital name : Ayushman Bharat</p>
           <p>Address: Khanda colony new panvel</p>
         </div>
         <div>

@@ -73,7 +73,7 @@ const ShowDoctors = () => {
         </div>
       )}
 
-      <div className="doctor-list" style={{ display: "flex", gap: "10px" }}>
+      <div className="doctor-list" style={{ display: "flex", flexWrap:'wrap' ,gap: "10px" }}>
         {doctors.map((doctor) => (
           <Card key={doctor.id} variant="outlined">
             <CardContent sx={{ padding: "12px" }}>
@@ -100,7 +100,7 @@ const ShowDoctors = () => {
                   </div>
                 )}
                 {userData.user === "patient" && (
-                  <div style={{ padding: "2px" }}>
+                  <div style={{ padding: "2px", display:'flex', justifyContent:"center" }}>
                     <Button
                       variant="contained"
                       color="primary"

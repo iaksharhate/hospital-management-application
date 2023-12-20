@@ -20,6 +20,10 @@ class UserService{
         return axios.get(`${USER_BASE_URL}/getUserById/${id}`);
     }
 
+    getAllPatients(){
+        return axios.get(`${USER_BASE_URL}/getPatients`)
+    }
+
     updateUserDetails(id, data){
         return axios.put(`${USER_BASE_URL}/UpdateById/${id}`, data);
     }

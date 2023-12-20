@@ -10,6 +10,7 @@ import About from "../About/About";
 import ShowDoctors from "./ShowDoctor";
 import CreateDoctor from "./CreateDoctor";
 import UpdateUser from "./UpdateUser";
+import ShowPatients from "./ShowPatients"
 import { useParams } from "react-router-dom";
 
 const AdminDashboard = () => {
@@ -22,7 +23,8 @@ const AdminDashboard = () => {
     Doctors: "Doctors",
     Insurance: "Insurance",
     About: "About",
-    AddDoctor: "Add Doctor"
+    AddDoctor: "Add Doctor",
+    Patients: "Patients"
   };
 
   const location = useLocation();
@@ -84,6 +86,24 @@ const AdminDashboard = () => {
                 alt=""
               />
               <span>{PaperEnum.Doctors}</span>
+            </Paper>
+            <Paper
+              onClick={() => navigate(RoutesPath.SHOW_PATIENTS)}
+              elevation={elevation}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "#e0e0e0",
+                  transform: "translateY(-5px)",
+                  boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
+                },
+              }}
+            >
+              <img
+                height={80}
+                src="https://img.icons8.com/?size=256&id=PZ32ChJum6pA&format=png"
+                alt="Patients"
+              />
+              <span>{PaperEnum.Patients}</span>
             </Paper>
             <Paper
               onClick={() => navigate(RoutesPath.SHOW_APPOINTMENT)}
@@ -261,7 +281,8 @@ const AdminDashboard = () => {
         )}
         {location.pathname === RoutesPath.SHOW_DOCTOR && <ShowDoctors />}
         {location.pathname === RoutesPath.CREATE_DOCTOR && <CreateDoctor />}
-        {location.pathname === RoutesPath.UPDATE_DOCTOR && <UpdateUser/>}
+        {location.pathname === RoutesPath.UPDATE_DOCTOR && <UpdateUser />}
+        {location.pathname === RoutesPath.SHOW_PATIENTS && <ShowPatients/>}
       </div>
     </div>
   );

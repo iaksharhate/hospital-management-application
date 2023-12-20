@@ -1,12 +1,10 @@
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AuthRoute from "./AuthRoute";
 import Dashboard from "./Component/Dashboard/Dashboard";
 import SignIn from "./Component/SignIn/SignIn";
 import SignUp from "./Component/SignUp/SignUp";
 import { RoutesPath } from "./Component/helper";
-import CreateDoctor from "./Component/Dashboard/CreateDoctor";
-import UpdateUser from "./Component/Dashboard/UpdateUser";
-import AuthRoute from "./AuthRoute";
 import ProtectedRoute from "./ProtectedRoute";
 function App() {
   return (
@@ -18,6 +16,7 @@ function App() {
           <Route path={RoutesPath.BOOK_APPOINTMENT}/>
           <Route path={RoutesPath.SHOW_APPOINTMENT} />
           <Route path={RoutesPath.SHOW_DOCTOR} />
+          <Route path={RoutesPath.SHOW_PATIENTS} />
           <Route path={RoutesPath.INSURANCE} />
           <Route path={RoutesPath.ABOUT} />
           <Route path={RoutesPath.CREATE_DOCTOR}/>

@@ -10,6 +10,7 @@ export const RoutesPath = {
   ABOUT: "/dashboard/about",
   CREATE_DOCTOR: "/dashboard/createDoctor",
   UPDATE_DOCTOR: "/dashboard/updateDoctor",
+  SHOW_PATIENTS: "/dashboard/patients",
   UPDATE_PATIENT: "/dashboard/updatePatient"
 };
 

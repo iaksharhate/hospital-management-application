@@ -402,7 +402,7 @@ function UpdateUser() {
                   id="email"
                   name="email"
                   variant="outlined"
-                  required
+                  disabled
                   value={formValue.email}
                   size="small"
                   onChange={handleChange}

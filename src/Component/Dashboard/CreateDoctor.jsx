@@ -84,7 +84,7 @@ function CreateDoctor() {
         newErrors.password = "";
       }
     }
-    
+
     if (id == "confirmPassword") {
       if (!value) {
         newErrors.confirmPassword = "Password is required";
@@ -242,7 +242,7 @@ function CreateDoctor() {
 
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length < 0) {
+    if (Object.keys(validationErrors).length == 0) {
       try {
         const response = await UserService.createUser(doctor);
         if (response.data.code === "200") {
@@ -258,7 +258,7 @@ function CreateDoctor() {
       alert('Please enter correct details!!!');
     }
   };
-  
+
   return (
     <div>
       <div>
